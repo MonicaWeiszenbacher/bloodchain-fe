@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import UserProfile from '../donor/UserProfile';
 import ScheduleAppointment from '../donor/ScheduleAppointment';
 import BloodReminderAndReserveUser from '../donor/BloodReminderAndReserveUser';

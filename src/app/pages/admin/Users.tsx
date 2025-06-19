@@ -1,31 +1,19 @@
-const mockUsers = [
-  {
-    id: 1,
-    fullName: 'Alice Popescu',
-    email: 'alice.popescu@example.com',
-    bloodType: 'B+',
-    age: 29,
-    sex: 'Female',
-  },
-  {
-    id: 2,
-    fullName: 'Mihai Ionescu',
-    email: 'mihai.ionescu@example.com',
-    bloodType: 'O-',
-    age: 35,
-    sex: 'Male',
-  },
-  {
-    id: 3,
-    fullName: 'Elena Stan',
-    email: 'elena.stan@example.com',
-    bloodType: 'AB+',
-    age: 42,
-    sex: 'Female',
-  },
-];
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { transfusionCenterService } from '@/app/services/api';
+import { ITransfusionCenterDonor } from '@/app/models/transfusion-center-models';
 
 function Users() {
+
+  const [users, setUsers] = useState<ITransfusionCenterDonor[]>([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    transfusionCenterService.getDonors(Number(id)).then(response => {
+      setUsers(response.data);
+    })
+  }, []);
+  
   return (
     <section className="users-section">
       <div className="container">
@@ -42,13 +30,13 @@ function Users() {
             </tr>
           </thead>
           <tbody>
-            {mockUsers.map(user => (
+            {users.map(user => (
               <tr key={user.id}>
-                <td>{user.fullName}</td>
+                <td>{user.name}</td>
                 <td>{user.email}</td>
-                <td>{user.bloodType}</td>
+                <td>{user.bloodGroup}</td>
                 <td>{user.age}</td>
-                <td>{user.sex}</td>
+                <td>{user.gender}</td>
               </tr>
             ))}
           </tbody>

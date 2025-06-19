@@ -4,10 +4,16 @@ import logo from '../../../images/logo.png';
 
 function AdminLayout() {
   const [menuActive, setMenuActive] = useState(false);
+  const userId: number = Number(localStorage.getItem('userId'));
 
   const handleLinkClick = () => {
     setMenuActive(false);
   };
+  
+  const handleLogout = () => {
+    handleLinkClick();
+    localStorage.clear();
+  }
 
   return (
     <>
@@ -18,11 +24,11 @@ function AdminLayout() {
         </Link>
 
         <nav className={`nav-links ${menuActive ? 'active' : ''}`}>
-          <Link to="/admin-dashboard/donation-history" className="nav-link" onClick={handleLinkClick}>Donation History</Link>
-          <Link to="/admin-dashboard/blood-requests" className="nav-link" onClick={handleLinkClick}>Blood Requests</Link>
-          <Link to="/admin-dashboard/schedule-admin" className="nav-link" onClick={handleLinkClick}>Schedule Appointments</Link>
-          <Link to="/admin-dashboard/users" className="nav-link" onClick={handleLinkClick}>Users</Link>
-          <Link to="/login" className="nav-link" onClick={handleLinkClick}>Log Out</Link>
+          <Link to={`/admin-dashboard/donation-history/${userId}`} className="nav-link" onClick={handleLinkClick}>Donation History</Link>
+          <Link to={`/admin-dashboard/blood-requests/${userId}`} className="nav-link" onClick={handleLinkClick}>Blood Requests</Link>
+          <Link to={`/admin-dashboard/schedule-admin/${userId}`} className="nav-link" onClick={handleLinkClick}>Schedule Appointments</Link>
+          <Link to={`/admin-dashboard/users/${userId}`} className="nav-link" onClick={handleLinkClick}>Users</Link>
+          <Link to="/login" className="nav-link" onClick={handleLogout}>Log Out</Link>
         </nav>
 
         <div

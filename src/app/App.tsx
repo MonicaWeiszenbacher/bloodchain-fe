@@ -1,22 +1,22 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import InfoDonateBlood from './pages/employee/InfoDonateBlood';
-import InfoNeedBlood from './pages/employee/InfoNeedBlood';
-import LogInPage from './pages/login/LogInPage';
+import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
+import InfoDonateBlood from '@/app/pages/admin/InfoDonateBlood';
+import InfoNeedBlood from '@/app/pages/admin/InfoNeedBlood';
+import LogInPage from '@/app/pages/auth/LogInPage';
 import RegisterPage from './pages/register/RegisterPage';
-import UserLayout from './pages/employee/UserLayout';
-import UserDashboard from './pages/employee/UserDashboard';
+import UserLayout from '@/app/pages/admin/UserLayout';
+import UserDashboard from '@/app/pages/admin/UserDashboard';
 import UserProfile from './pages/donor/UserProfile';
 import MyDonationHistory from './pages/donor/MyDonationHistory';
 import ScheduleAppointment from './pages/donor/ScheduleAppointment';
 import BloodReminderAndReserveUser from './pages/donor/BloodReminderAndReserveUser';
-import RequestBlood from './pages/employee/RequestBlood';
-import AdminLayout from './pages/employee/AdminLayout';
-import AdminDashboard from './pages/employee/AdminDashboard';
-import DonationHistory from './pages/employee/DonationHistory';
-import BloodRequests from './pages/employee/BloodRequests';
-import ScheduleAppointmentAdmin from './pages/employee/ScheduleAppointmentAdmin';
-import Users from './pages/employee/Users';
+import RequestBlood from '@/app/pages/admin/RequestBlood';
+import AdminLayout from '@/app/pages/admin/AdminLayout';
+import AdminDashboard from '@/app/pages/admin/AdminDashboard';
+import DonationHistory from '@/app/pages/admin/DonationHistory';
+import BloodRequests from '@/app/pages/admin/BloodRequests';
+import ScheduleAppointmentAdmin from '@/app/pages/admin/ScheduleAppointmentAdmin';
+import Users from '@/app/pages/admin/Users';
 import logo from '../images/logo.png';
 import bloodDonationImg from '../images/blood_donation1.jpg';
 import bloodBagImg from '../images/blood_donation2.png';
@@ -70,20 +70,20 @@ function App() {
             {/* User Dashboard cu layout și rute nested */}
             <Route path="/user-dashboard/*" element={<UserLayout />}>
               <Route index element={<UserDashboard />} /> {/* ruta /user-dashboard */}
-              <Route path="profile" element={<UserProfile />} />
-              <Route path="profile/my-donation-history" element={<MyDonationHistory />} />
-              <Route path="schedule" element={<ScheduleAppointment />} />
-              <Route path="blood-reminder-and-reserve-user" element={<BloodReminderAndReserveUser />} />
-              <Route path="request-blood" element={<RequestBlood />} />
+              <Route path="profile/:id" element={<UserProfile />} />
+              <Route path="profile/:id/my-donation-history" element={<MyDonationHistory />} />
+              <Route path="schedule/:id" element={<ScheduleAppointment />} />
+              <Route path="blood-reminder-and-reserve-user/:id" element={<BloodReminderAndReserveUser />} />
+              <Route path="request-blood/:id" element={<RequestBlood />} />
             </Route>
 
             {/* Admin Dashboard */}
             <Route path="/admin-dashboard" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
-              <Route path="donation-history" element={<DonationHistory />} />
-              <Route path="blood-requests" element={<BloodRequests />} />
-              <Route path="schedule-admin" element={<ScheduleAppointmentAdmin />} />
-              <Route path="users" element={<Users />} />
+              <Route path="donation-history/:id" element={<DonationHistory />} />
+              <Route path="blood-requests/:id" element={<BloodRequests />} />
+              <Route path="schedule-admin/:id" element={<ScheduleAppointmentAdmin />} />
+              <Route path="users/:id" element={<Users />} />
             </Route>
           </Routes>
         </main>

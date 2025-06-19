@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import logo from '../../../images/logo.png';
 
 function UserLayout() {
   const [menuActive, setMenuActive] = useState(false);
+  const userId: number = Number(localStorage.getItem('userId'));
 
   const handleLinkClick = () => {
     setMenuActive(false); // Închide meniul la click pe link
@@ -12,15 +14,15 @@ function UserLayout() {
     <>
       <header className="navbar">
         <Link to="/user-dashboard" className="logo-link" onClick={handleLinkClick}>
-          <img src="../../../images/logo.png" alt="BloodChain Logo" className="logo-img" />
+          <img src={logo} alt="BloodChain Logo" className="logo-img" />
           <span className="logo-text">BloodChain</span>
         </Link>
 
         <nav className={`nav-links ${menuActive ? 'active' : ''}`}>
-          <Link to="/user-dashboard/profile" className="nav-link" onClick={handleLinkClick}>My Profile</Link>
-          <Link to="/user-dashboard/request-blood" className="nav-link" onClick={handleLinkClick}>Request Blood</Link>
-          <Link to="/user-dashboard/schedule" className="nav-link" onClick={handleLinkClick}>Schedule Appointment</Link>
-          <Link to="/user-dashboard/blood-reminder-and-reserve-user" className="nav-link" onClick={handleLinkClick}>Blood Reminder And Reserve</Link>
+          <Link to={`/user-dashboard/profile/${userId}`} className="nav-link" onClick={handleLinkClick}>My Profile</Link>
+          <Link to={`/user-dashboard/request-blood/${userId}`} className="nav-link" onClick={handleLinkClick}>Request Blood</Link>
+          <Link to={`/user-dashboard/schedule/${userId}`} className="nav-link" onClick={handleLinkClick}>Schedule Appointment</Link>
+          <Link to={`/user-dashboard/blood-reminder-and-reserve-user/${userId}`} className="nav-link" onClick={handleLinkClick}>Blood Reminder And Reserve</Link>
           <Link to="/" className="nav-link" onClick={handleLinkClick}>Log Out</Link>
         </nav>
 

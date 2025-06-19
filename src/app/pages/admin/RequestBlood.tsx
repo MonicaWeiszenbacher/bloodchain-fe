@@ -1,12 +1,21 @@
 import { useState } from 'react';
+import { donorService } from '@/app/services/api';
+import { useParams } from 'react-router-dom';
 
 export default function RequestBlood() {
   const [bloodType, setBloodType] = useState('');
   const [units, setUnits] = useState<any>(1);
   const [takeoverDate, setTakeoverDate] = useState('');
+  const { id } = useParams();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    
+    donorService.requestBlood(Number(id), {
+      bloodGroup: bloodType,
+      units: units,
+      takeoverDate: takeoverDate
+    });
 
     // Simulare trimitere
     alert(`Request submitted:\nBlood Type: ${bloodType}\nUnits: ${units}\nDate: ${takeoverDate}`);

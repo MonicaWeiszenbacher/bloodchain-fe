@@ -1,27 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { donorService } from '@/app/services/api';
+import { useParams } from 'react-router-dom';
+import { ITransfusionCenterData } from '@/app/models/transfusion-center-models';
 
 function ScheduleAppointment() {
-  const [transfusionCenterId, setTransfusionCenterId] = useState('');
+  const [transfusionCenterId, setTransfusionCenterId] = useState(0);
+  const [locations, setLocations] = useState<ITransfusionCenterData[]>([]);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [token, setToken] = useState('');
-
-  const generateToken = () => {
-    // Token simplu simulat (ex: AB1234CD)
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  };
+  const { id } = useParams();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const newToken = generateToken();
-    setToken(newToken);
-    setSubmitted(true);
+    donorService.scheduleAppointment(Number(id), {
+      transfusionCenterId: transfusionCenterId,
+      time: `${date}T${time}:00`
+    }).then(() => {
+      setSubmitted(true);
+    })
+  };
+
+  useEffect(() => {
+    donorService.getClosestCentersForUser(Number(id)).then(response => {
+      setLocations(response.data);
+      setTransfusionCenterId(response.data[0]?.id)
+    });
+  }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setTransfusionCenterId(Number(event.target.value));
   };
 
   return (
@@ -31,17 +39,17 @@ function ScheduleAppointment() {
       {!submitted ? (
         <form method="POST" onSubmit={handleSubmit}>
           <label style={{ display: 'block', marginBottom: '1rem' }}>
-            Select TransfusionCenterId:
-            <input 
-              type="number" 
-              value={transfusionCenterId} 
-              placeholder="Enter Transfusion Center Id"
-              min="1"
-              max="20"
-              onChange={(e) => setTransfusionCenterId(e.target.value)} 
-              required 
-              style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
+            Select TransfusionCenter:
+            <select id="location-select" value={transfusionCenterId} onChange={handleChange}
+                    required
+                    style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}>
+              <option value="" disabled>-- Please choose a location --</option>
+              {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {`${location.name} - ${location.cityName}`}
+                  </option>
+              ))}
+            </select>
           </label>
 
           <label style={{ display: 'block', marginBottom: '1rem' }}>
@@ -79,10 +87,6 @@ function ScheduleAppointment() {
           <p>Your donation is scheduled for:</p>
           <p>at transfusion center id <strong>{transfusionCenterId}</strong>
           , <strong>{date}</strong> <strong>{time}</strong></p>
-          <p>Your donation token:</p>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c', marginTop: '0.5rem' }}>
-            {token}
-          </div>
         </div>
       )}
     </div>

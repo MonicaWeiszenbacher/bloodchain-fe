@@ -1,41 +1,26 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './BloodRequests.css';
+import { transfusionCenterService } from '@/app/services/api';
+import { useParams } from 'react-router-dom';
+import { IBloodRequestData, IBloodRequestStatus } from '@/app/models/transfusion-center-models';
 
-const mockRequests = [
-  {
-    reqId: 1,
-    donorId: 4,
-    transfusionCenterId: 1,
-    bloodType: 'B+',
-    units: 2,
-    time: '2025-06-01',
-  },
-  {
-    reqId: 2,
-    donorId: 5,
-    transfusionCenterId: 1,
-    bloodType: 'O-',
-    units: 1,
-    time: '2025-05-30',
-  },
-  {
-    reqId: 3,
-    donorId: 7,
-    transfusionCenterId: 3,
-    bloodType: 'AB+',
-    units: 3,
-    time: '2025-05-28',
-  },
-];
 
 function BloodRequests() {
-  const [requests, setRequests] = useState(mockRequests);
+  const [requests, setRequests] = useState<IBloodRequestData[]>([]);
+  const { id } = useParams();
+
+  useEffect(() => {
+    transfusionCenterService.getBloodRequests(Number(id)).then(response => {
+      setRequests(response.data);
+    })
+  }, []);
 
   const handleApprove = (reqId: any) => {
     const confirmed = window.confirm("Are you sure you want to approve this blood request?");
     if (confirmed) {
       console.log(`Approved request ID: ${reqId}`);
-      setRequests(requests.filter(req => req.reqId !== reqId));
+      setRequests(requests.filter(req => req.requesterId !== reqId));
+      transfusionCenterService.updateBloodRequest(Number(id), reqId, IBloodRequestStatus.Approved);
     }
   };
 
@@ -43,7 +28,8 @@ function BloodRequests() {
     const confirmed = window.confirm("Are you sure you want to reject this blood request?");
     if (confirmed) {
       console.log(`Rejected request ID: ${reqId}`);
-      setRequests(requests.filter(req => req.reqId !== reqId));
+      setRequests(requests.filter(req => req.requesterId !== reqId));
+      transfusionCenterService.updateBloodRequest(Number(id), reqId, IBloodRequestStatus.Rejected);
     }
   };
 
@@ -57,7 +43,7 @@ function BloodRequests() {
             <tr>
               <th>Request ID</th>
               <th>User ID</th>
-              <th>Transfusion Center ID</th>
+              <th>Stock</th>
               <th>Blood Type</th>
               <th>Units</th>
               <th>Date</th>
@@ -71,16 +57,16 @@ function BloodRequests() {
               </tr>
             ) : (
               requests.map((req) => (
-                <tr key={req.reqId}>
-                  <td>{req.reqId}</td>
-                  <td>{req.donorId}</td>
-                  <td>{req.transfusionCenterId}</td>
-                  <td>{req.bloodType}</td>
+                <tr key={req.id}>
+                  <td>{req.id}</td>
+                  <td>{req.requesterId}</td>
+                  <td>{req.currentStock}</td>
+                  <td>{req.bloodGroup}</td>
                   <td>{req.units}</td>
-                  <td>{req.time}</td>
+                  <td>{req.takeoverDate}</td>
                   <td>
-                    <button onClick={() => handleApprove(req.reqId)} className="approve-btn">Approve</button>
-                    <button onClick={() => handleReject(req.reqId)} className="reject-btn">Reject</button>
+                    <button onClick={() => handleApprove(req.id)} className="approve-btn">Approve</button>
+                    <button onClick={() => handleReject(req.id)} className="reject-btn">Reject</button>
                   </td>
                 </tr>
               ))

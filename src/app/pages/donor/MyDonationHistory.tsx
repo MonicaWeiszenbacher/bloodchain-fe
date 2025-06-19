@@ -1,13 +1,18 @@
+import { useEffect, useState } from 'react';
+import { donorService } from '@/app/services/api';
+import { IDonorDonationHistory } from '@/app/models/donor-models';
+import { useParams } from 'react-router-dom';
+
 function MyDonationHistory() {
-  const donationHistory = [
-    { id: '1', transfusionCenter: 'transfusionCenter1', time: '2025-05-10 12:00', units: 1, token: 'BCT-XY91' },
-    { id: '2', transfusionCenter: 'transfusionCenter1', time: '2025-03-02 08:00', units: 1, token: 'BCT-RD56' },
-    { id: '3', transfusionCenter: 'transfusionCenter1', time: '2024-12-14 11:00', units: 2, token: 'BCT-ZT88' },
-    { id: '4', transfusionCenter: 'transfusionCenter1', time: '2024-12-14 11:00', units: 2, token: 'BCT-ZT88' },
-    { id: '5', transfusionCenter: 'transfusionCenter1', time: '2025-01-11 11:00', units: 2, token: 'BCT-ZB23' },
 
+  const [donationHistory, setDonationHistory] = useState<IDonorDonationHistory[]>([]);
+  const { id } = useParams();
 
-  ];
+  useEffect(() => {
+    donorService.getDonations(Number(id)).then(response => {
+      setDonationHistory(response.data);
+    })
+  }, []);
 
   return (
     <div className="donation-history-container" style={{ maxWidth: '800px', margin: '1rem auto', padding: '1rem' }}>

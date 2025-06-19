@@ -17,6 +17,7 @@ function LogInPage() {
       console.log(response);
       const data: ILoginResponse = response.data;
       localStorage.setItem('jwtToken', data.token);
+      localStorage.setItem('userId', data.id);
       if (data.role == 'DONOR') {
         navigate('/user-dashboard');
       } else {

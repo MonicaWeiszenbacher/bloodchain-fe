@@ -1,21 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ITransfusionCenterData } from '@/app/models/transfusion-center-models';
+import { useParams } from 'react-router-dom';
+import { donorService } from '@/app/services/api';
 
 function BloodReminderAndReserveUser() {
-  const [transfusionCenterId, setTransfusionCenterId] = useState('');
+  const [transfusionCenterId, setTransfusionCenterId] = useState(0);
+  const [locations, setLocations] = useState<ITransfusionCenterData[]>([]);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [frequency, setFrequency] = useState<any>(2); // luni
   const [submitted, setSubmitted] = useState(false);
-  const [token, setToken] = useState('');
-
-  const generateToken = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  };
+  const { id } = useParams();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -25,9 +20,24 @@ function BloodReminderAndReserveUser() {
       return;
     }
 
-    const newToken = generateToken();
-    setToken(newToken);
-    setSubmitted(true);
+    donorService.reminderAndReserve(Number(id), {
+      transfusionCenterId: transfusionCenterId,
+      startDate: `${date}T${time}:00.000`,
+      frequency: frequency
+    }).then(() => {
+      setSubmitted(true);
+    })
+  };
+
+  useEffect(() => {
+    donorService.getClosestCentersForUser(Number(id)).then(response => {
+      setLocations(response.data);
+      setTransfusionCenterId(response.data[0]?.id)
+    });
+  }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setTransfusionCenterId(Number(event.target.value));
   };
 
   return (
@@ -37,17 +47,17 @@ function BloodReminderAndReserveUser() {
       {!submitted ? (
         <form method="POST" onSubmit={handleSubmit}>
           <label style={{ display: 'block', marginBottom: '1rem' }}>
-            Transfusion Center ID:
-            <input 
-              type="number"
-              placeholder="Enter Transfusion Center Id"
-              min="1"
-              max="12"
-              value={transfusionCenterId}
-              onChange={(e) => setTransfusionCenterId(e.target.value)}
-              required
-              style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
+            Select TransfusionCenter:
+            <select id="location-select" value={transfusionCenterId} onChange={handleChange}
+                    required
+                    style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}>
+              <option value="" disabled>-- Please choose a location --</option>
+              {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {`${location.name} - ${location.cityName}`}
+                  </option>
+              ))}
+            </select>
           </label>
 
           <label style={{ display: 'block', marginBottom: '1rem' }}>
@@ -98,10 +108,6 @@ function BloodReminderAndReserveUser() {
           <p><strong>{date}</strong> at <strong>{time}</strong></p>
           <p>At transfusion center ID: <strong>{transfusionCenterId}</strong></p>
           <p>Reminder every <strong>{frequency}</strong> months</p>
-          <p>Your reservation token:</p>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c', marginTop: '0.5rem' }}>
-            {token}
-          </div>
         </div>
       )}
     </div>

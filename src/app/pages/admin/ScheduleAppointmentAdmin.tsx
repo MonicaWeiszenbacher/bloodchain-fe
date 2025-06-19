@@ -1,28 +1,23 @@
 import { useState } from 'react';
+import { transfusionCenterService } from '@/app/services/api';
+import { useParams } from 'react-router-dom';
 
 function ScheduleAppointmentAdmin() {
-  const [donorId, setDonorId] = useState('');
-  const [transfusionCenterId, setTransfusionCenterId] = useState('');
+  const [donorId, setDonorId] = useState(0);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [token, setToken] = useState('');
-
-  const generateToken = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  };
+  const { id } = useParams();
+  const [transfusionCenterId] = useState(id);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    const newToken = generateToken();
-    setToken(newToken);
-    setSubmitted(true);
-
+    transfusionCenterService.scheduleAppointment(Number(id), {
+      donorId: donorId,
+      time: `${date}T${time}:00`
+    }).then(() => {
+      setSubmitted(true);
+    })
   };
 
   return (
@@ -36,19 +31,7 @@ function ScheduleAppointmentAdmin() {
             <input 
               type="number" 
               value={donorId} 
-              onChange={(e) => setDonorId(e.target.value)} 
-              required 
-              min="1"
-              style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
-            />
-          </label>
-
-          <label style={{ display: 'block', marginBottom: '1rem' }}>
-            Transfusion Center ID:
-            <input 
-              type="number" 
-              value={transfusionCenterId} 
-              onChange={(e) => setTransfusionCenterId(e.target.value)} 
+              onChange={(e) => setDonorId(Number(e.target.value))} 
               required 
               min="1"
               style={{ display: 'block', width: '100%', padding: '0.5rem', marginTop: '0.5rem' }}
@@ -90,10 +73,6 @@ function ScheduleAppointmentAdmin() {
           <p>Donor ID: <strong>{donorId}</strong></p>
           <p>Transfusion Center ID: <strong>{transfusionCenterId}</strong></p>
           <p>Date and Time: <strong>{date}</strong> at <strong>{time}</strong></p>
-          <p>Generated Token:</p>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#e74c3c', marginTop: '0.5rem' }}>
-            {token}
-          </div>
         </div>
       )}
     </div>
