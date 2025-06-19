@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { transfusionCenterService } from '@/app/services/api';
+import { transfusionCenterService } from '@/app/api';
 import { ITransfusionCenterDonor } from '@/app/models/transfusion-center-models';
 
 function Users() {

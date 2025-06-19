@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './UserProfile.css';
-import { donorService } from '@/app/services/api';
+import { donorService } from '@/app/api';
 import { IDonorDetails } from '@/app/models/donor-models';
 
 function UserProfile() {

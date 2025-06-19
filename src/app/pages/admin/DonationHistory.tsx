@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ITransfusionCenterDonationHistory } from '@/app/models/transfusion-center-models';
-import { formatDate } from '@/app/utils/utils';
-import { transfusionCenterService } from '@/app/services/api';
+import { formatDate } from '@/app/utils';
+import { transfusionCenterService } from '@/app/api';
 import { useParams } from 'react-router-dom';
 
 function DonationHistory() {

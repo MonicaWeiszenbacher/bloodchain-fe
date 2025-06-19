@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { transfusionCenterService } from '@/app/services/api';
+import { transfusionCenterService } from '@/app/api';
 import { useParams } from 'react-router-dom';
 
 function ScheduleAppointmentAdmin() {

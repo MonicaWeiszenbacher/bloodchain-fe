@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ITransfusionCenterData } from '@/app/models/transfusion-center-models';
 import { useParams } from 'react-router-dom';
-import { donorService } from '@/app/services/api';
+import { donorService } from '@/app/api';
 
 function BloodReminderAndReserveUser() {
   const [transfusionCenterId, setTransfusionCenterId] = useState(0);

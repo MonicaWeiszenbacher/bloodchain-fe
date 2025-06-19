@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { donorService } from '@/app/services/api';
+import { donorService } from '@/app/api';
 import { IDonorDonationHistory } from '@/app/models/donor-models';
 import { useParams } from 'react-router-dom';
 

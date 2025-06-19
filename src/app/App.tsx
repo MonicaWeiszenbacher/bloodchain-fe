@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from 'react-router-dom';
 import InfoDonateBlood from '@/app/pages/admin/InfoDonateBlood';
 import InfoNeedBlood from '@/app/pages/admin/InfoNeedBlood';
 import LogInPage from '@/app/pages/auth/LogInPage';
-import RegisterPage from './pages/register/RegisterPage';
+import RegisterPage from './pages/auth/RegisterPage';
 import UserLayout from '@/app/pages/admin/UserLayout';
 import UserDashboard from '@/app/pages/admin/UserDashboard';
 import UserProfile from './pages/donor/UserProfile';

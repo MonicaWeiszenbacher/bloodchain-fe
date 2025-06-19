@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { FormEvent, useState } from 'react';
 import { ILoginResponse } from '@/app/models/auth-models';
-import { authService } from '@/app/services/api';
+import { authService } from '@/app/api';
 
 function LogInPage() {
   const [email, setEmail] = useState('');

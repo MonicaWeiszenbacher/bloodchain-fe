@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './BloodRequests.css';
-import { transfusionCenterService } from '@/app/services/api';
+import { transfusionCenterService } from '@/app/api';
 import { useParams } from 'react-router-dom';
 import { IBloodRequestData, IBloodRequestStatus } from '@/app/models/transfusion-center-models';
 
